@@ -90,4 +90,6 @@ class ReliabilityScoringService:
         return score
 
     def recalculate_all(self) -> list[ReliabilityScore]:
-        return [self.recalculate_member(member) for member in Member.objects.all()]
+        # Only calculate reliability for active members
+        active_members = Member.objects.exclude(status='Inactive')
+        return [self.recalculate_member(member) for member in active_members]

@@ -130,6 +130,9 @@ class MemberViewSet(viewsets.ReadOnlyModelViewSet):
         if faction_id:
             queryset = queryset.filter(faction__torn_faction_id=faction_id)
 
+        # Exclude inactive members from the active roster
+        queryset = queryset.exclude(status='Inactive')
+
         return queryset.order_by('name')
 
 class OrganizedCrimeViewSet(viewsets.ReadOnlyModelViewSet):

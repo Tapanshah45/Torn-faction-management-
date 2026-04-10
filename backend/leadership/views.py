@@ -110,7 +110,10 @@ class ChainAssignSlotView(APIView):
 class ReliabilityListView(generics.ListAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ReliabilityScoreSerializer
-    queryset = ReliabilityScore.objects.select_related('member').all()
+    
+    def get_queryset(self):
+        # Only show reliability scores for active members (not marked Inactive)
+        return ReliabilityScore.objects.select_related('member').exclude(member__status='Inactive')
 
 
 class ReliabilityDetailView(generics.RetrieveAPIView):
