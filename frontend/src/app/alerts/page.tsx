@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
+import { safeStorage } from '@/lib/safeStorage';
 import { AlertTriangle } from 'lucide-react';
 
 interface Alert {
@@ -15,7 +16,7 @@ export default function Alerts() {
 
   useEffect(() => {
     const fetchAlerts = async () => {
-      const token = localStorage.getItem('access');
+      const token = safeStorage.getItem('access');
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/alerts/`, {
           headers: { 'Authorization': `Bearer ${token}` }

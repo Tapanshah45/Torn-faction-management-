@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
+import { safeStorage } from '@/lib/safeStorage';
 
 interface Member {
   id: number;
@@ -16,7 +17,7 @@ export default function Members() {
 
   useEffect(() => {
     const fetchMembers = async () => {
-      const token = localStorage.getItem('access');
+      const token = safeStorage.getItem('access');
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/members/`, {
           headers: { 'Authorization': `Bearer ${token}` }

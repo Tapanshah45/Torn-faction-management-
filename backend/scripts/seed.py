@@ -13,10 +13,26 @@ from django.utils import timezone
 def run():
     print("Seeding database...")
 
-    # Create superuser
-    if not User.objects.filter(username='admin').exists():
-        User.objects.create_superuser('admin', 'admin@example.com', 'adminpass', role='admin')
+    # Ensure admin user exists and has expected credentials for local setup.
+    admin_user, created = User.objects.get_or_create(
+        username='admin',
+        defaults={
+            'email': 'admin@example.com',
+            'role': 'admin',
+            'is_staff': True,
+            'is_superuser': True,
+        },
+    )
+    admin_user.set_password('pass')
+    admin_user.role = 'admin'
+    admin_user.email = admin_user.email or 'admin@example.com'
+    admin_user.is_staff = True
+    admin_user.is_superuser = True
+    admin_user.save(update_fields=['password', 'role', 'email', 'is_staff', 'is_superuser'])
+    if created:
         print("Created admin user.")
+    else:
+        print("Updated admin user password.")
 
     # Create Faction
     faction, _ = Faction.objects.get_or_create(

@@ -41,13 +41,35 @@ class WarAnalyticsView(views.APIView):
 
 class MemberViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = Member.objects.all()
     serializer_class = MemberSerializer
+
+    def get_queryset(self):
+        service = TornAPIService()
+        data = service.get_faction_members()
+        faction_id = data.get('ID') if data else None
+
+        queryset = Member.objects.all()
+        if faction_id:
+            queryset = queryset.filter(faction__torn_faction_id=faction_id)
+
+        return queryset.order_by('name')
 
 class OrganizedCrimeViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = [IsAuthenticated]
-    queryset = OrganizedCrime.objects.all().order_by('-timestamp')
     serializer_class = OrganizedCrimeSerializer
+
+    def get_queryset(self):
+        service = TornAPIService()
+        data = service.get_faction_members()
+        faction_id = data.get('ID') if data else None
+
+        queryset = OrganizedCrime.objects.select_related('member', 'member__faction').order_by('-timestamp')
+        if faction_id:
+            queryset = queryset.filter(member__faction__torn_faction_id=faction_id)
+        else:
+            queryset = queryset.none()
+
+        return queryset
 
 class AnalyticsHistoryView(views.APIView):
     permission_classes = [IsAuthenticated]

@@ -36,6 +36,10 @@ class TornAPIService:
         return self._fetch('faction', 'basic,positions', id=faction_id, cache_ttl=60)
     def get_chain_data(self, faction_id=''):
         return self._fetch('faction', 'chain', id=faction_id, cache_ttl=30)
+
+    def get_organized_crimes_data(self, faction_id=''):
+        return self._fetch('faction', 'crimes', id=faction_id, cache_ttl=60)
+
     def get_war_data(self, faction_id=''):
         return self._fetch('faction', 'crimes,upgrades', id=faction_id, cache_ttl=30)
     def get_member_stats(self, player_id):

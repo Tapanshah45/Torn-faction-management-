@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/layout/Sidebar';
+import { safeStorage } from '@/lib/safeStorage';
 import { Users, UserCheck, Clock, Link as LinkIcon, Swords, Target, AlertTriangle, ShieldAlert } from 'lucide-react';
 
 interface DashboardData {
@@ -21,7 +22,7 @@ export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('access');
+    const token = safeStorage.getItem('access');
     if (!token) {
       router.push('/login');
       return;

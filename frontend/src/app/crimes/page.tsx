@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
+import { safeStorage } from '@/lib/safeStorage';
 import { ShieldAlert, CheckCircle, XCircle } from 'lucide-react';
 
 interface Crime {
@@ -17,7 +18,7 @@ export default function Crimes() {
 
   useEffect(() => {
     const fetchCrimes = async () => {
-      const token = localStorage.getItem('access');
+      const token = safeStorage.getItem('access');
       try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/organized-crimes/`, {
           headers: { 'Authorization': `Bearer ${token}` }

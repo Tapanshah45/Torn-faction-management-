@@ -1,8 +1,9 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Link as LinkIcon, Swords, AlertTriangle, Settings, ShieldAlert } from 'lucide-react';
+import { LayoutDashboard, Users, Link as LinkIcon, Swords, AlertTriangle, Settings, ShieldAlert, Landmark, Gauge } from 'lucide-react';
 import clsx from 'clsx';
+import { safeStorage } from '@/lib/safeStorage';
 
 const navItems = [
   { name: 'Dashboard', href: '/', icon: LayoutDashboard },
@@ -10,6 +11,8 @@ const navItems = [
   { name: 'Live Chain', href: '/chain', icon: LinkIcon },
   { name: 'War Analytics', href: '/wars', icon: Swords },
   { name: 'Organized Crimes', href: '/crimes', icon: ShieldAlert },
+  { name: 'Payouts', href: '/payouts', icon: Landmark },
+  { name: 'Reliability', href: '/reliability', icon: Gauge },
   { name: 'Alerts', href: '/alerts', icon: AlertTriangle },
   { name: 'Settings', href: '/settings', icon: Settings },
 ];
@@ -40,8 +43,8 @@ export default function Sidebar() {
       <div className="mt-auto border-t border-gray-700 pt-4">
         <button
           onClick={() => {
-            localStorage.removeItem('access');
-            localStorage.removeItem('refresh');
+            safeStorage.removeItem('access');
+            safeStorage.removeItem('refresh');
             window.location.href = '/login';
           }}
           className="w-full text-left p-3 text-red-400 hover:bg-gray-700 hover:text-red-300 rounded-lg transition-colors"

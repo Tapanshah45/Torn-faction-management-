@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { safeStorage } from '@/lib/safeStorage';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -21,8 +22,14 @@ export default function Login() {
 
       if (res.ok) {
         const data = await res.json();
-        localStorage.setItem('access', data.access);
-        localStorage.setItem('refresh', data.refresh);
+        const accessSaved = safeStorage.setItem('access', data.access);
+        const refreshSaved = safeStorage.setItem('refresh', data.refresh);
+
+        if (!accessSaved || !refreshSaved) {
+          setError('Browser storage is blocked. Please allow site data for localhost.');
+          return;
+        }
+
         router.push('/');
       } else {
         setError('Invalid credentials');

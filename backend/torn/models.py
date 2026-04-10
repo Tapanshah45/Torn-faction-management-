@@ -49,6 +49,7 @@ class ChainLog(models.Model):
 
 class WarLog(models.Model):
     member = models.ForeignKey(Member, on_delete=models.CASCADE, related_name='war_logs')
+    war_id = models.CharField(max_length=64, blank=True, null=True, db_index=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     attacks_won = models.IntegerField(default=0)
     attacks_lost = models.IntegerField(default=0)

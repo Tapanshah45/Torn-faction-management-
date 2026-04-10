@@ -1,13 +1,28 @@
 import { useEffect, useState } from 'react';
 
 interface ChainData {
-    current?: number;
+    current?: number | string;
     timer?: string;
-    [key: string]: any;
+    time_remaining?: number;
+    [key: string]: unknown;
+}
+
+interface ChainBreakEvent {
+    chain_id: string;
+    reason: string;
+    chain_broken: boolean;
+    time_remaining?: number | null;
+    last_hitter_name?: string | null;
+}
+
+interface ReliabilityRefreshMessage {
+    updated: number;
 }
 
 export function useLiveUpdates() {
     const [chainData, setChainData] = useState<ChainData | null>(null);
+    const [chainBreakEvent, setChainBreakEvent] = useState<ChainBreakEvent | null>(null);
+    const [reliabilityRefresh, setReliabilityRefresh] = useState<ReliabilityRefreshMessage | null>(null);
     const [isConnected, setIsConnected] = useState(false);
 
     useEffect(() => {
@@ -23,6 +38,10 @@ export function useLiveUpdates() {
             const message = JSON.parse(event.data);
             if (message.type === 'chain') {
                 setChainData(message.payload);
+            } else if (message.type === 'chain_break') {
+                setChainBreakEvent(message.payload);
+            } else if (message.type === 'reliability_refresh') {
+                setReliabilityRefresh(message.payload);
             }
         };
 
@@ -31,5 +50,5 @@ export function useLiveUpdates() {
         };
     }, []);
 
-    return { chainData, isConnected };
+    return { chainData, chainBreakEvent, reliabilityRefresh, isConnected };
 }
