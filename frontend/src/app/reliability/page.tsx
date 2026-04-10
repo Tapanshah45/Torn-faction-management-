@@ -39,10 +39,9 @@ export default function ReliabilityPage() {
   const [riskFilter, setRiskFilter] = useState<'all' | ReliabilityRow['risk_level']>('all');
   const [sortDesc, setSortDesc] = useState(true);
 
-  const token = safeStorage.getItem('access');
-
   useEffect(() => {
     const load = async () => {
+      const token = safeStorage.getItem('access');
       if (!token) return;
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/reliability`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -53,7 +52,7 @@ export default function ReliabilityPage() {
     };
 
     load();
-  }, [token]);
+  }, []);
 
   const filtered = useMemo(() => {
     return rows

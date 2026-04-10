@@ -2,7 +2,7 @@ from celery import shared_task
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 
-from .serializers import ChainBreakEventSerializer, ReliabilityScoreSerializer
+from .serializers import ChainBreakEventSerializer
 from torn.services import TornAPIService
 
 from .services import ChainBreakDetectionService, ReliabilityScoringService
@@ -41,7 +41,7 @@ def recalculate_reliability_scores():
                 'type': 'send_update',
                 'data': {
                     'type': 'reliability_refresh',
-                    'payload': ReliabilityScoreSerializer(scores, many=True).data,
+                    'payload': {'updated': len(scores)},
                 },
             },
         )

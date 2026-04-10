@@ -45,7 +45,30 @@ export default function Dashboard() {
     };
 
     fetchDashboard();
-    const interval = setInterval(fetchDashboard, 30000);
+    const interval = setInterval(async () => {
+      const token = safeStorage.getItem('access');
+      if (!token) {
+        clearInterval(interval);
+        router.push('/login');
+        return;
+      }
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/dashboard/`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        if (res.status === 401) {
+          clearInterval(interval);
+          router.push('/login');
+          return;
+        }
+        if (res.ok) {
+          setData(await res.json());
+        }
+      } catch (err) {
+        console.error('Dashboard refresh error', err);
+      }
+    }, 30000);
     return () => clearInterval(interval);
   }, [router]);
 

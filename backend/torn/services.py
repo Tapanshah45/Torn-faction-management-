@@ -41,6 +41,6 @@ class TornAPIService:
         return self._fetch('faction', 'crimes', id=faction_id, cache_ttl=60)
 
     def get_war_data(self, faction_id=''):
-        return self._fetch('faction', 'crimes,upgrades', id=faction_id, cache_ttl=30)
+        return self._fetch('faction', 'rankedwars', id=faction_id, cache_ttl=30)
     def get_member_stats(self, player_id):
         return self._fetch('user', 'profile,personalstats', id=player_id, cache_ttl=60)

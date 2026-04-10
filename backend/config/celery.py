@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 from celery import Celery
 from celery.schedules import crontab
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
@@ -12,7 +13,7 @@ app.conf.beat_schedule = {
     },
     'sync-live-chains-every-30-seconds': {
         'task': 'torn.tasks.sync_live_chain_data',
-        'schedule': 30.0,
+        'schedule': timedelta(seconds=30),
     },
     'sync-organized-crimes-every-5-minutes': {
         'task': 'torn.tasks.sync_organized_crimes',
@@ -20,7 +21,7 @@ app.conf.beat_schedule = {
     },
     'scan-chain-break-events-every-30-seconds': {
         'task': 'leadership.tasks.scan_chain_break_events',
-        'schedule': 30.0,
+        'schedule': timedelta(seconds=30),
     },
     'recalculate-reliability-scores-every-30-minutes': {
         'task': 'leadership.tasks.recalculate_reliability_scores',

@@ -91,7 +91,9 @@ def take_activity_snapshots():
                 )
 
             # Keep local DB aligned with current faction roster from Torn.
-            Member.objects.filter(faction=faction).exclude(torn_player_id__in=live_member_ids).delete()
+            Member.objects.filter(faction=faction).exclude(
+                torn_player_id__in=live_member_ids
+            ).update(status='Inactive')
     except Exception as e:
         logger.error(f"Error taking snapshots: {str(e)}")
 

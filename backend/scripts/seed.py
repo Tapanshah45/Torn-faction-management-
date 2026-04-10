@@ -64,7 +64,7 @@ def run():
         ChainLog.objects.get_or_create(member=m, hits=15, respect_gain=45.5, chain_id="9999")
 
         # Create War Logs
-        WarLog.objects.get_or_create(member=m, attacks_won=10, attacks_lost=2, assists=5, respect_gain=30.0)
+        WarLog.objects.get_or_create(member=m, war_id='rw-seed-001', attacks_won=10, attacks_lost=2, assists=5, respect_gain=30.0)
 
         # Create OC
         OrganizedCrime.objects.get_or_create(member=m, crime_name='Political Assassination', role='Shooter', success=True)

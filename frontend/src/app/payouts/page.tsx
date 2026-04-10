@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import { safeStorage } from '@/lib/safeStorage';
 import { Calculator, Download, Search, ShieldCheck, Swords, TriangleAlert } from 'lucide-react';
@@ -69,13 +69,14 @@ export default function PayoutsPage() {
   const [loadingWarData, setLoadingWarData] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const loadWarList = async () => {
+  const loadWarList = useCallback(async () => {
     if (!token) return;
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payouts/wars`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!res.ok) {
+      setError('Failed to load ranked wars list. Check your API connection.');
       return;
     }
 
@@ -87,9 +88,9 @@ export default function PayoutsPage() {
       setSelectedWarId(active.war_id);
       setManualWarId(active.war_id);
     }
-  };
+  }, [token]);
 
-  const loadHistory = async () => {
+  const loadHistory = useCallback(async () => {
     if (!token) return;
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payouts/history`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -98,14 +99,14 @@ export default function PayoutsPage() {
     if (res.ok) {
       setHistory(await res.json());
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     loadWarList();
     loadHistory();
-  }, []);
+  }, [loadWarList, loadHistory]);
 
-  const loadWarContributions = async (warId: string) => {
+  const loadWarContributions = useCallback(async (warId: string) => {
     if (!token || !warId) return;
     setLoadingWarData(true);
     setError(null);
@@ -130,13 +131,13 @@ export default function PayoutsPage() {
     } finally {
       setLoadingWarData(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (selectedWarId) {
       loadWarContributions(selectedWarId);
     }
-  }, [selectedWarId]);
+  }, [selectedWarId, loadWarContributions]);
 
   const sortedMembers = useMemo(() => {
     if (!result) return [];

@@ -45,8 +45,8 @@ class ReliabilityScoringService:
 
         assignments = ChainAssignment.objects.filter(member=member)
         chain_completed = assignments.filter(completed=True).count()
-        chain_expected = assignments.count() or max(ChainLog.objects.filter(member=member).aggregate(total=Sum('hits')).get('total') or 0, 1)
-        chain_score = Decimal(chain_completed * 100 / chain_expected) if chain_expected else Decimal('0')
+        chain_expected = assignments.count() or 1
+        chain_score = min(Decimal(chain_completed * 100 / chain_expected), Decimal('100')) if chain_expected else Decimal('0')
 
         war_rows = WarLog.objects.filter(member=member)
         war_success = war_rows.aggregate(total=Sum('attacks_won'))['total'] or 0
